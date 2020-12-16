@@ -16,6 +16,8 @@ namespace NotNamedWar
         private UIManager StartPage = new UIManager();
         private GameState GameState = new GameState();
 
+        private GameListView g = new GameListView();
+
         public MainGame()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -54,6 +56,14 @@ namespace NotNamedWar
                 });
             StartPage.LabelManager.AddLabel("NOT NAMED WAR", "title", new Vector2(100,100), Content.Load<SpriteFont>("TitleFont"));
             StartPage.ImageManager.AddImage(Content.Load<Texture2D>("test"), new Rectangle(0, 0, 1366, 680), "test");
+
+            g.DefaultBackground = Content.Load<Texture2D>("test");
+            g.DefaultFont = Content.Load<SpriteFont>("DefaultFont");
+            g.ListViewItemSize = new Vector2(200, 50);
+            g.Position = new Rectangle(0, 0, 200, 500);
+
+            g.AddListViewItem("aaaa");
+            g.AddListViewItem("55555555555");
             #endregion
         }
 
@@ -90,6 +100,7 @@ namespace NotNamedWar
             {
                 case RunningState.start:
                     StartPage.Draw(_spriteBatch);
+                    g.Draw(_spriteBatch);
                     break;
                 case RunningState.suspend:
                     break;
