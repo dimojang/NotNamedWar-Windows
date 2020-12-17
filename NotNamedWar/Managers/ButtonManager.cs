@@ -22,7 +22,7 @@ namespace NotNamedWar.Managers
         public List<Texture2D> DefaultTextures { get; set; }
 
         public List<System.Drawing.Color> DefaultColors { get; set; } = new List<System.Drawing.Color>() 
-        { System.Drawing.Color.White, System.Drawing.Color.Black, System.Drawing.Color.Green };
+        { System.Drawing.Color.White, System.Drawing.Color.White, System.Drawing.Color.Wheat };
 
         public Font DefaultFont { get; set; }
 

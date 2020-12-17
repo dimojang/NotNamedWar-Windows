@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using NotNamedWar.GameMethod;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace NotNamedWar.Models
@@ -12,7 +13,7 @@ namespace NotNamedWar.Models
     {
         public GameLabel Content { get; set; } = new GameLabel();
 
-        public List<Texture2D> ButtonTextures { get; set; } = new List<Texture2D>();
+        public List<Texture2D> ButtonTextures { get; set; }
 
         public List<System.Drawing.Color> FontColors { get; set; }
 

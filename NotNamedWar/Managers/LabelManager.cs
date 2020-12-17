@@ -13,7 +13,7 @@ namespace NotNamedWar.Managers
 
         public System.Drawing.Font DefaultFont { get; set; }
 
-        public System.Drawing.Color DefaultFontColor { get; set; } = System.Drawing.Color.Black;
+        public System.Drawing.Color DefaultFontColor { get; set; } = System.Drawing.Color.White;
 
         public GameLabel LabelTag(string Tag)
         {

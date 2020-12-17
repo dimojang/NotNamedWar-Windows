@@ -15,7 +15,16 @@ namespace NotNamedWar
     {
         start,
         suspend,
-        running
+        running,
+        battle,
+        story,
+        battle_prepare,
+        battle_teach_p1,
+        battle_develop_p1,
+        battle_teamup_p1,
+        battle_teach_p2,
+        battle_develop_p2,
+        battle_teamup_p2
     }
 
     public class MainGame : Game
@@ -24,6 +33,7 @@ namespace NotNamedWar
         private SpriteBatch _spriteBatch;
 
         private UIManager StartPage = new UIManager();
+        private UIManager BattlePreparePage = new UIManager();
         private GameState GameState;
 
         public MainGame()
@@ -54,28 +64,30 @@ namespace NotNamedWar
             #region Start page
             //### Static resources ###
             StartPage.DefaultFont = new Font("微软雅黑", 20);
-            StartPage.ButtonManager.DefaultTextures = new List<Texture2D>() 
+            StartPage.ButtonManager.DefaultTextures = new List<Texture2D>()
             {
                 Content.Load<Texture2D>("ButtonTextures/Default"),
                 Content.Load<Texture2D>("ButtonTextures/MouseMove"),
                 Content.Load<Texture2D>("ButtonTextures/MouseDown")
             };
-            StartPage.ListViewManager.DefaultBackground = Content.Load<Texture2D>("test");
             //### Add controls ###
-            StartPage.ButtonManager.AddButton("单击任意处开始", "start_button", new Rectangle(150, 150, 200, 50), 
-                () => 
-                {
-                    StartPage.ButtonManager.ButtonTag("start_button").Visibility = false;
-                    StartPage.LabelManager.LabelTag("title").Location = new Point(50, 50);
-                });
+            StartPage.ButtonManager.AddButton("对抗模式", "story_start", new Rectangle(573, 359, 220, 50), 
+                () => { GameState = GameState.battle_prepare; });
+            StartPage.ButtonManager.AddButton("战役模式", "battle_start", new Rectangle(573, 409, 220, 50), () => { });
             StartPage.LabelManager.AddLabel("NOT NAMED WAR", "title", new Point(100,100), new Font("微软雅黑", 80));
-            StartPage.ImageManager.AddImage(Content.Load<Texture2D>("test"), new Rectangle(0, 0, 1366, 680), "test");
-            //StartPage.ListViewManager.AddListView(new Rectangle(100, 5, 200, 300), new Point(200, 50), "test");
-            //StartPage.ListViewManager.ListViewTag("test").AddListViewItem("aaaaaaaa");
-            //StartPage.ListViewManager.ListViewTag("test").AddListViewItem("bbbbbbbb");
-            //StartPage.ListViewManager.ListViewTag("test").AddListViewItem("aaaaacccccaaa");
-            //StartPage.ListViewManager.ListViewTag("test").AddListViewItem("aaaaaccccdaaa");
+            #endregion
 
+            #region Battle prepare page
+            BattlePreparePage.DefaultFont = new Font("微软雅黑", 20);
+            BattlePreparePage.ButtonManager.DefaultTextures = new List<Texture2D>()
+            {
+                Content.Load<Texture2D>("ButtonTextures/Default"),
+                Content.Load<Texture2D>("ButtonTextures/MouseMove"),
+                Content.Load<Texture2D>("ButtonTextures/MouseDown")
+            };
+            BattlePreparePage.ListViewManager.DefaultBackground = Content.Load<Texture2D>("test");
+
+            BattlePreparePage.ListViewManager.AddListView(new Rectangle(0, 0, 200, 698), new Point(200, 80), "player_list");
             #endregion
         }
 
@@ -94,6 +106,25 @@ namespace NotNamedWar
                     break;
                 case GameState.running:
                     break;
+                case GameState.battle:
+                    break;
+                case GameState.story:
+                    break;
+                case GameState.battle_prepare:
+                    BattlePreparePage.Update(Mouse.GetState());
+                    break;
+                case GameState.battle_teach_p1:
+                    break;
+                case GameState.battle_develop_p1:
+                    break;
+                case GameState.battle_teamup_p1:
+                    break;
+                case GameState.battle_teach_p2:
+                    break;
+                case GameState.battle_develop_p2:
+                    break;
+                case GameState.battle_teamup_p2:
+                    break;
                 default:
                     break;
             }
@@ -103,7 +134,7 @@ namespace NotNamedWar
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Black);
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
@@ -117,10 +148,29 @@ namespace NotNamedWar
                     break;
                 case GameState.running:
                     break;
+                case GameState.battle:
+                    break;
+                case GameState.story:
+                    break;
+                case GameState.battle_prepare:
+                    BattlePreparePage.Draw(_spriteBatch, GraphicsDevice);
+                    break;
+                case GameState.battle_teach_p1:
+                    break;
+                case GameState.battle_develop_p1:
+                    break;
+                case GameState.battle_teamup_p1:
+                    break;
+                case GameState.battle_teach_p2:
+                    break;
+                case GameState.battle_develop_p2:
+                    break;
+                case GameState.battle_teamup_p2:
+                    break;
                 default:
                     break;
             }
-            
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
