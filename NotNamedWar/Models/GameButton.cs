@@ -1,71 +1,47 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using NotNamedWar.GameMethod;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace NotNamedWar.Models
 {
-    public enum GameButtonState
-    {
-        Default,
-        MouseMove,
-        MouseDown
-    }
-    public delegate void Trigger();
-
-    class GameButton
+    class GameButton : GameControl
     {
         public GameLabel Content { get; set; } = new GameLabel();
 
-        public bool Visibility { get; set; } = true;
+        public List<Texture2D> ButtonTextures { get; set; } = new List<Texture2D>();
 
-        public string Tag { get; set; } = "";
+        public List<System.Drawing.Color> FontColors { get; set; }
 
-        private Rectangle position = new Rectangle();
-        public Rectangle Position
+        public void Update(Point MousePosition, ButtonState MouseButtonState)
         {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                position = value;
-                Content.Position = new Vector2(value.X, value.Y + value.Height / 2);
-            }
+            if (GameMath.Contain(Position, MousePosition))
+                if (MouseButtonState == ButtonState.Pressed)
+                    State = ControlState.MouseDown;
+                else
+                {
+                    //Click event detect
+                    if (State == ControlState.MouseDown)
+                        Click();
+                    State = ControlState.MouseMove;
+                }
+            else
+                State = ControlState.None;
+
+            Content.Location = new Point(Position.X + (Size.X - Content.PrintedSize.X) / 2, Position.Y + (Size.Y - Content.PrintedSize.Y) / 2);
+            Content.FontColor = FontColors[(int)State];
         }
 
-        public bool isClicked = false;
-        private GameButtonState buttonState = GameButtonState.Default;
-        public GameButtonState ButtonState
-        {
-            get
-            {
-                return buttonState;
-            }
-            set
-            {
-                isClicked = buttonState == GameButtonState.MouseDown && value == GameButtonState.MouseMove;
-                buttonState = value;
-                Content.FontColor = FontColors[(int)value];
-            }
-        }
-
-        public List<Texture2D> ButtonTextures { get; set; }
-
-        public List<Color> FontColors { get; set; }
-
-        public Trigger ButtonClick { get; set; }
-
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
             if (!Visibility) return;
 
-            spriteBatch.Draw(ButtonTextures[(int)ButtonState], Position, Color.White);
+            spriteBatch.Draw(ButtonTextures[(int)State], Position, Color.White);
 
-            Content.Draw(spriteBatch);
-                
+            Content.Draw(spriteBatch, graphicsDevice);
         }
     }
 }

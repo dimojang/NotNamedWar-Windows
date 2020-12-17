@@ -2,14 +2,15 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace NotNamedWar.Managers
 {
     class UIManager
     {
-        private SpriteFont defaultFont;
-        public SpriteFont DefaultFont
+        private Font defaultFont;
+        public Font DefaultFont
         {
             get
             {
@@ -20,6 +21,7 @@ namespace NotNamedWar.Managers
                 defaultFont = value;
                 ButtonManager.DefaultFont = value;
                 LabelManager.DefaultFont = value;
+                ListViewManager.DefaultFont = value;
             }
         }
 
@@ -29,16 +31,20 @@ namespace NotNamedWar.Managers
 
         public ImageManager ImageManager { get; set; } = new ImageManager();
 
+        public ListViewManager ListViewManager { get; set; } = new ListViewManager();
+
         public void Update(MouseState mouse)
         {
             ButtonManager.Update(mouse.Position, mouse.LeftButton);
+            ListViewManager.Update(mouse.ScrollWheelValue, mouse.Position);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
             ImageManager.Draw(spriteBatch);
-            ButtonManager.Draw(spriteBatch);
-            LabelManager.Draw(spriteBatch);
+            ButtonManager.Draw(spriteBatch, graphicsDevice);
+            LabelManager.Draw(spriteBatch, graphicsDevice);
+            ListViewManager.Draw(spriteBatch, graphicsDevice);
         }
     }
 }

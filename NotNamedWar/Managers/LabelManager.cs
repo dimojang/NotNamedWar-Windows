@@ -11,43 +11,44 @@ namespace NotNamedWar.Managers
     {
         public List<GameLabel> Labels { get; set; } = new List<GameLabel>();
 
-        public SpriteFont DefaultFont { get; set; }
+        public System.Drawing.Font DefaultFont { get; set; }
 
-        public Color DefaultFontColor { get; set; } = Color.Black;
+        public System.Drawing.Color DefaultFontColor { get; set; } = System.Drawing.Color.Black;
 
-        public void RepositionLabel(string Tag, Vector2 Position)
+        public GameLabel LabelTag(string Tag)
         {
             foreach (GameLabel label in Labels)
-                if (label.Tag == Tag) label.Position = Position;
+                if (label.Tag == Tag) return label;
+            return null;
         }
 
-        public void AddLabel(string Content, string Tag, Vector2 Position)
+        public void AddLabel(string Content, string Tag, Point Location)
         {
             Labels.Add(new GameLabel() 
             { 
                 Content = Content,
                 Tag = Tag,
-                Position = Position,
+                Location = Location,
                 Font = DefaultFont,
                 FontColor = DefaultFontColor
             });
         }
-        public void AddLabel(string Content, string Tag, Vector2 Position, SpriteFont Font)
+        public void AddLabel(string Content, string Tag, Point Location, System.Drawing.Font Font)
         {
             Labels.Add(new GameLabel()
             {
                 Content = Content,
                 Tag = Tag,
-                Position = Position,
+                Location = Location,
                 Font = Font,
                 FontColor = DefaultFontColor
             });
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
             foreach (GameLabel label in Labels)
-                label.Draw(spriteBatch);
+                label.Draw(spriteBatch, graphicsDevice);
         }
     }
 }

@@ -6,15 +6,9 @@ using System.Text;
 
 namespace NotNamedWar.Models
 {
-    class GameImage
+    class GameImage : GameControl
     {
-        public Rectangle Position { get; set; } = Rectangle.Empty;
-
         public Texture2D Image { get; set; }
-
-        public bool Visibility { get; set; } = true;
-
-        public string Tag { get; set; } = "";
 
         public void Draw(SpriteBatch spriteBatch)
         {

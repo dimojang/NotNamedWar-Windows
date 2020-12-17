@@ -5,87 +5,68 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NotNamedWar.Models;
+using NotNamedWar.GameMethod;
+using static NotNamedWar.Models.GameControl;
+using System.Drawing;
+
+using Color = Microsoft.Xna.Framework.Color;
+using Point = Microsoft.Xna.Framework.Point;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace NotNamedWar.Managers
 {
     class ButtonManager
     {
-        public List<GameButton> Buttons { get; set; } = new List<GameButton>();
+        private List<GameButton> buttons { get; set; } = new List<GameButton>();
 
         public List<Texture2D> DefaultTextures { get; set; }
 
-        public List<Color> DefaultColors { get; set; } = new List<Color>() { Color.White, Color.Black, Color.Green };
+        public List<System.Drawing.Color> DefaultColors { get; set; } = new List<System.Drawing.Color>() 
+        { System.Drawing.Color.White, System.Drawing.Color.Black, System.Drawing.Color.Green };
 
-        public SpriteFont DefaultFont { get; set; }
+        public Font DefaultFont { get; set; }
 
         public void RemoveButton(string Tag)
         {
-            bool isSucess = false;
-            foreach (GameButton button in Buttons)
-                if (button.Tag == Tag) isSucess = Buttons.Remove(button);
-            if (!isSucess) throw new Exception("Failed to find button with tag: " + Tag + ".");
+            foreach (GameButton button in buttons)
+                if (button.Tag == Tag) buttons.Remove(button);
         }
 
-        public void ChangeButtonVisibility(string Tag, bool Visibility)
+        public GameButton ButtonTag(string Tag)
         {
-            bool isSucess = false;
-            foreach (GameButton button in Buttons)
+            foreach (GameButton button in buttons)
                 if (button.Tag == Tag)
-                {
-                    button.Visibility = Visibility;
-                    isSucess = true;
-                }
-            if (!isSucess) throw new Exception("Failed to find button with tag: " + Tag + ".");
+                    return button;
+            return null;
         }
 
         public void AddButton(string Content, string Tag, Rectangle Position, Trigger Click)
         {
-            Buttons.Add(new GameButton() 
-            { 
-                Content = new GameLabel() 
+            buttons.Add(new GameButton()
+            {
+                Content = new GameLabel()
                 {
-                    Content = Content, 
-                    Font = DefaultFont 
-                }, 
+                    Content = Content,
+                    Font = DefaultFont
+                },
                 Tag = Tag,
-                Position = Position, 
-                ButtonClick = Click,
+                Position = Position,
+                Click = Click,
                 ButtonTextures = DefaultTextures,
                 FontColors = DefaultColors
             });
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
-            foreach (GameButton button in Buttons)
-                button.Draw(spriteBatch);
+            foreach (GameButton button in buttons)
+                button.Draw(spriteBatch, graphicsDevice);
         }
 
         public void Update(Point MousePosition, ButtonState MouseButtonState)
         {
-            //Click detection
-            foreach (GameButton button in Buttons)
-            {
-                int verticalMax = button.Position.Y + button.Position.Height;
-                int horizontalMax = button.Position.X + button.Position.Width;
-
-                if (MousePosition.X < horizontalMax && 
-                    MousePosition.Y < verticalMax && 
-                    MousePosition.X > button.Position.X && 
-                    MousePosition.Y > button.Position.Y)
-                {
-                    button.ButtonState = (MouseButtonState == ButtonState.Pressed) ? 
-                        GameButtonState.MouseDown : 
-                        GameButtonState.MouseMove;
-
-                    if (MouseButtonState == ButtonState.Released && 
-                        button.isClicked && 
-                        button.Visibility) 
-                        button.ButtonClick();
-                }
-                else 
-                    button.ButtonState = GameButtonState.Default;
-            }
+            foreach (GameButton button in buttons)
+                button.Update(MousePosition, MouseButtonState);
         }
     }
 }

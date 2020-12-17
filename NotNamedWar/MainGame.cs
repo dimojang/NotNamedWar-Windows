@@ -5,18 +5,26 @@ using System.Diagnostics;
 using NotNamedWar.Models;
 using NotNamedWar.Managers;
 using System.Collections.Generic;
+using System.Drawing;
+using Point = Microsoft.Xna.Framework.Point;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace NotNamedWar
 {
+    enum GameState
+    {
+        start,
+        suspend,
+        running
+    }
+
     public class MainGame : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
         private UIManager StartPage = new UIManager();
-        private GameState GameState = new GameState();
-
-        private GameListView g = new GameListView();
+        private GameState GameState;
 
         public MainGame()
         {
@@ -28,6 +36,12 @@ namespace NotNamedWar
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            GameState = GameState.start;
+
+            _graphics.PreferredBackBufferWidth = 1366;
+            _graphics.PreferredBackBufferHeight = 768;
+            _graphics.IsFullScreen = false;
+            _graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -39,31 +53,29 @@ namespace NotNamedWar
             // TODO: use this.Content to load your game content here
             #region Start page
             //### Static resources ###
-            StartPage.DefaultFont = Content.Load<SpriteFont>("DefaultFont");
+            StartPage.DefaultFont = new Font("微软雅黑", 20);
             StartPage.ButtonManager.DefaultTextures = new List<Texture2D>() 
             {
                 Content.Load<Texture2D>("ButtonTextures/Default"),
                 Content.Load<Texture2D>("ButtonTextures/MouseMove"),
                 Content.Load<Texture2D>("ButtonTextures/MouseDown")
             };
+            StartPage.ListViewManager.DefaultBackground = Content.Load<Texture2D>("test");
             //### Add controls ###
-            StartPage.ButtonManager.AddButton("CLICK TO START", "start_button", new Rectangle(150, 150, 200, 50), 
+            StartPage.ButtonManager.AddButton("单击任意处开始", "start_button", new Rectangle(150, 150, 200, 50), 
                 () => 
                 {
-                    //GameState.RunningState = RunningState.running;
-                    StartPage.ButtonManager.ChangeButtonVisibility("start_button", false);
-                    StartPage.LabelManager.RepositionLabel("title", new Vector2(50, 50));
+                    StartPage.ButtonManager.ButtonTag("start_button").Visibility = false;
+                    StartPage.LabelManager.LabelTag("title").Location = new Point(50, 50);
                 });
-            StartPage.LabelManager.AddLabel("NOT NAMED WAR", "title", new Vector2(100,100), Content.Load<SpriteFont>("TitleFont"));
+            StartPage.LabelManager.AddLabel("NOT NAMED WAR", "title", new Point(100,100), new Font("微软雅黑", 80));
             StartPage.ImageManager.AddImage(Content.Load<Texture2D>("test"), new Rectangle(0, 0, 1366, 680), "test");
+            //StartPage.ListViewManager.AddListView(new Rectangle(100, 5, 200, 300), new Point(200, 50), "test");
+            //StartPage.ListViewManager.ListViewTag("test").AddListViewItem("aaaaaaaa");
+            //StartPage.ListViewManager.ListViewTag("test").AddListViewItem("bbbbbbbb");
+            //StartPage.ListViewManager.ListViewTag("test").AddListViewItem("aaaaacccccaaa");
+            //StartPage.ListViewManager.ListViewTag("test").AddListViewItem("aaaaaccccdaaa");
 
-            g.DefaultBackground = Content.Load<Texture2D>("test");
-            g.DefaultFont = Content.Load<SpriteFont>("DefaultFont");
-            g.ListViewItemSize = new Vector2(200, 50);
-            g.Position = new Rectangle(0, 0, 200, 500);
-
-            g.AddListViewItem("aaaa");
-            g.AddListViewItem("55555555555");
             #endregion
         }
 
@@ -73,14 +85,14 @@ namespace NotNamedWar
                 Exit();
 
             // TODO: Add your update logic here
-            switch (GameState.RunningState)
+            switch (GameState)
             {
-                case RunningState.start:
+                case GameState.start:
                     StartPage.Update(Mouse.GetState());
                     break;
-                case RunningState.suspend:
+                case GameState.suspend:
                     break;
-                case RunningState.running:
+                case GameState.running:
                     break;
                 default:
                     break;
@@ -91,20 +103,19 @@ namespace NotNamedWar
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
-            switch (GameState.RunningState)
+            switch (GameState)
             {
-                case RunningState.start:
-                    StartPage.Draw(_spriteBatch);
-                    g.Draw(_spriteBatch);
+                case GameState.start:
+                    StartPage.Draw(_spriteBatch, GraphicsDevice);
                     break;
-                case RunningState.suspend:
+                case GameState.suspend:
                     break;
-                case RunningState.running:
+                case GameState.running:
                     break;
                 default:
                     break;
